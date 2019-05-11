@@ -1,26 +1,50 @@
 let DATA;
 let METADATA;
 
-let set1 = {
+const set1 = {
   browserSelect: null,
   browserVersionSelect: null,
   osSelect: null,
   osVersionSelect: null,
   apiSelect: null,
   gehContainer: null,
+  container: null,
 };
 
-let set2 = {
+const set2 = {
   browserSelect: null,
   browserVersionSelect: null,
   osSelect: null,
   osVersionSelect: null,
   apiSelect: null,
   gehContainer: null,
+  container: null,
+};
+
+const combinations = {
+  browser: {},
+  os: {},
 };
 
 function getGEHs (browser, browserVersion, os, osVersion, api) {
-  return DATA[browser][browserVersion][os][osVersion][api];
+  const btn = document.getElementById('no-combination-button');
+
+  if (
+    DATA[browser] &&
+    DATA[browser][browserVersion] &&
+    DATA[browser][browserVersion][os] &&
+    DATA[browser][browserVersion][os][osVersion]
+  ) {
+    btn.style.display = 'none';
+    return DATA[browser][browserVersion][os][osVersion][api];
+  }
+
+  const msg = `map for ${browser} ${browserVersion}, ${os} ${osVersion} global event handlers does not exist`;
+
+  console.error(msg);
+
+  btn.textContent = `${msg} - would you like to add it and contribute to the project?`;
+  btn.style.display = 'block';
 }
 
 function getGEHsBySelectedOptions (setnum) {
@@ -82,15 +106,50 @@ function getData (cb) {
     });
 }
 
-function onSelect (event, dontMarkDiffs = false) {
-  const setnum = event.target.id.replace(/\D/g,'');
+function filterVersionsOut (setnum, comboList, select, selectVersion) {
   const set = getSet (setnum);
+
+  const options = selectVersion.parentElement
+    .getElementsByClassName ('menu')[0]
+    .getElementsByClassName ('item');
+
+  let firstEnabledElement;
+
+  for (let i = 0; i < options.length; i++) {
+    const option = options[i];
+
+    const version = option.textContent;
+
+    if (!comboList[select.value].includes (version)) {
+      option.style.display = 'none';
+    } else {
+      if (option.style.display === 'none') {
+        firstEnabledElement = option;
+      }
+      option.style.display = '';
+    }
+  }
+
+  if (firstEnabledElement) {
+    firstEnabledElement.click ();
+  }
+}
+
+function onSelect (event, dontMarkDiffs = false) {
+  const setnum = event.target.id.replace (/\D/g, '');
+  const set = getSet (setnum);
+
+  filterVersionsOut (setnum, combinations.browser, set.browserSelect, set.browserVersionSelect);
+  filterVersionsOut (setnum, combinations.os, set.osSelect, set.osVersionSelect);
 
   while (set.gehContainer.firstChild) {
     set.gehContainer.removeChild (set.gehContainer.firstChild);
   }
 
-  const arr = getGEHsBySelectedOptions (setnum)//.sort();
+  const arr = getGEHsBySelectedOptions (setnum); //.sort();
+  if (!arr) {
+    return;
+  }
 
   for (let i = 0; i < arr.length; i++) {
     const geh = arr[i];
@@ -110,56 +169,95 @@ function onSelect (event, dontMarkDiffs = false) {
     set.gehContainer.appendChild (div);
   }
 
-  !dontMarkDiffs && markDiffs();
+  !dontMarkDiffs && markDiffs ();
 }
 
 function load (data, metadata, setnum) {
+  const props = {};
+
+  function canUseProp (type, prop) {
+    if (!props[type]) {
+      props[type] = [];
+    }
+
+    if (props[type].includes (prop)) {
+      return false;
+    }
+
+    props[type].push (prop);
+    return true;
+  }
+
   const set = getSet (setnum);
 
   for (const browser in data) {
     const browserImg = metadata[browser]['img'];
     const browserData = data[browser];
 
-    const browserOption = document.createElement ('option');
+    if (canUseProp ('browser', browser)) {
+      const browserOption = document.createElement ('option');
 
-    browserOption.text = browser;
-    browserOption.id = browser;
-    browserOption.classList += 'browser';
+      browserOption.text = browser;
+      browserOption.id = browser;
+      browserOption.classList += 'browser';
 
-    set.browserSelect.appendChild (browserOption);
+      set.browserSelect.appendChild (browserOption);
+    }
 
     for (const browserVersion in browserData) {
       const browserVersionData = browserData[browserVersion];
 
-      const browserVersionOption = document.createElement ('option');
+      if (!combinations.browser[browser]) {
+        combinations.browser[browser] = [];
+      }
 
-      browserVersionOption.text = browserVersion;
-      browserVersionOption.id = browserVersion;
-      browserVersionOption.classList += 'version';
+      if (!combinations.browser[browser].includes (browserVersion)) {
+        combinations.browser[browser].push (browserVersion);
+      }
 
-      set.browserVersionSelect.appendChild (browserVersionOption);
+      if (canUseProp ('browserVersion', browserVersion)) {
+        const browserVersionOption = document.createElement ('option');
+
+        browserVersionOption.text = browserVersion;
+        browserVersionOption.id = browserVersion;
+        browserVersionOption.classList += 'version';
+
+        set.browserVersionSelect.appendChild (browserVersionOption);
+      }
 
       for (const os in browserVersionData) {
         const osData = browserVersionData[os];
 
-        const osOption = document.createElement ('option');
+        if (canUseProp ('os', os)) {
+          const osOption = document.createElement ('option');
 
-        osOption.text = os;
-        osOption.id = os;
-        osOption.classList += 'version';
+          osOption.text = os;
+          osOption.id = os;
+          osOption.classList += 'version';
 
-        set.osSelect.appendChild (osOption);
+          set.osSelect.appendChild (osOption);
+        }
 
         for (const osVersion in osData) {
           const apis = osData[osVersion];
 
-          const osVersionOption = document.createElement ('option');
+          if (!combinations.os[os]) {
+            combinations.os[os] = [];
+          }
 
-          osVersionOption.text = osVersion;
-          osVersionOption.id = osVersion;
-          osVersionOption.classList += 'version';
+          if (!combinations.os[os].includes (osVersion)) {
+            combinations.os[os].push (osVersion);
+          }
 
-          set.osVersionSelect.appendChild (osVersionOption);
+          if (canUseProp ('osVersion', osVersion)) {
+            const osVersionOption = document.createElement ('option');
+
+            osVersionOption.text = osVersion;
+            osVersionOption.id = osVersion;
+            osVersionOption.classList += 'version';
+
+            set.osVersionSelect.appendChild (osVersionOption);
+          }
 
           for (const api in apis) {
             const apiOption = document.createElement ('option');
@@ -186,6 +284,7 @@ function load (data, metadata, setnum) {
 
 function init (setnum) {
   const set = getSet (setnum);
+  set.container = document.querySelector ('#container-' + setnum);
   set.browserSelect = document.querySelector ('#browser-select-' + setnum);
   set.browserVersionSelect = document.querySelector (
     '#browser-version-select-' + setnum

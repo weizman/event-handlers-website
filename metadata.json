@@ -4,5 +4,14 @@
     },
     "Mac": {
         "img": "./src/img/mac.jpg"
+    },
+    "Firefox": {
+        "img": "./src/img/mac.jpg"
+    },
+    "Edge": {
+        "img": "./src/img/mac.jpg"
+    },
+    "Safari": {
+        "img": "./src/img/mac.jpg"
     }
 }
