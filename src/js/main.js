@@ -156,7 +156,7 @@ function onSelect (event, dontMarkDiffs = false) {
     const gehA = document.createElement ('a');
 
     gehA.textContent = geh;
-    gehA.id = geh + '-' + setnum;
+    gehA.id = geh.split(' ').join('') + '-' + setnum;
     gehA.style.margin = '10px';
     gehA.style.color = 'black';
     gehA.style.textDecoration = 'none';
@@ -282,6 +282,9 @@ function load (data, metadata, setnum) {
 
   initDropDowns (setnum);
   onSelect ({target: {id: setnum}}, true);
+
+  setTimeout (setMode);
+  setTimeout (setDisplay);
 }
 
 function init (setnum) {

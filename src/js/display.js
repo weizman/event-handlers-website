@@ -8,7 +8,7 @@ CONFIG = {
 let modeButton, displayButton;
 
 function getGEHElement (geh, setnum) {
-  return document.querySelector (`#${geh}-${setnum}`);
+  return document.querySelector (`#${geh.split(' ').join('')}-${setnum}`);
 }
 
 function unmarkDiff (geh, setnum, removeSimilars = false) {
@@ -29,21 +29,25 @@ function markDiffs (removeSimilars = false) {
   const gehs1 = getGEHsBySelectedOptions ('1');
   const gehs2 = getGEHsBySelectedOptions ('2');
 
-  for (let i = 0; i < gehs1.length; i++) {
-    const geh = gehs1[i];
-    if (getMode () === 'diff-mode' && gehs2.indexOf (geh) === -1) {
-      markDiff (geh, '1');
-    } else {
-      unmarkDiff (geh, '1', removeSimilars);
+  if (gehs1) {
+    for (let i = 0; i < gehs1.length; i++) {
+      const geh = gehs1[i];
+      if (getMode () === 'diff-mode' && gehs2 && gehs2.indexOf (geh) === -1) {
+        markDiff (geh, '1');
+      } else {
+        unmarkDiff (geh, '1', removeSimilars);
+      }
     }
   }
 
-  for (let i = 0; i < gehs2.length; i++) {
-    const geh = gehs2[i];
-    if (getMode () === 'diff-mode' && gehs1.indexOf (geh) === -1) {
-      markDiff (geh, '2');
-    } else {
-      unmarkDiff (geh, '2', removeSimilars);
+  if (gehs2) {
+    for (let i = 0; i < gehs2.length; i++) {
+      const geh = gehs2[i];
+      if (getMode () === 'diff-mode' && gehs1 && gehs1.indexOf (geh) === -1) {
+        markDiff (geh, '2');
+      } else {
+        unmarkDiff (geh, '2', removeSimilars);
+      }
     }
   }
 }
@@ -99,6 +103,3 @@ function setDisplay () {
     displayButton.style.display = 'none';
   }
 }
-
-setTimeout (setMode, 200);
-setTimeout (setDisplay, 200);
