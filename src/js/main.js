@@ -36,7 +36,7 @@ function getGEHs (browser, browserVersion, os, osVersion, api) {
     DATA[browser][browserVersion][os][osVersion]
   ) {
     btn.style.display = 'none';
-    return DATA[browser][browserVersion][os][osVersion][api];
+    return DATA[browser][browserVersion][os][osVersion][api] || ['this API has zero global event handlers'];
   }
 
   const msg = `map for ${browser} ${browserVersion}, ${os} ${osVersion} global event handlers does not exist`;
@@ -260,18 +260,20 @@ function load (data, metadata, setnum) {
           }
 
           for (const api in apis) {
-            const apiOption = document.createElement ('option');
+            if (canUseProp ('api', api)) {
+              const apiOption = document.createElement ('option');
 
-            apiOption.text = api;
-            apiOption.id = api;
-            apiOption.classList += 'api';
-            apiOption.style.color = 'red';
+              apiOption.text = api;
+              apiOption.id = api;
+              apiOption.classList += 'api';
+              apiOption.style.color = 'red';
 
-            if ('window' === api) {
-              apiOption.selected = 'selected';
+              if ('window' === api) {
+                apiOption.selected = 'selected';
+              }
+
+              set.apiSelect.appendChild (apiOption);
             }
-
-            set.apiSelect.appendChild (apiOption);
           }
         }
       }

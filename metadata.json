@@ -1,17 +1,17 @@
 {
-    "Chrome": {
+    "chrome": {
         "img": "./src/img/chrome.jpg"
     },
     "Mac": {
         "img": "./src/img/mac.jpg"
     },
-    "Firefox": {
+    "firefox": {
         "img": "./src/img/mac.jpg"
     },
-    "Edge": {
+    "edge": {
         "img": "./src/img/mac.jpg"
     },
-    "Safari": {
+    "safari": {
         "img": "./src/img/mac.jpg"
     }
 }
