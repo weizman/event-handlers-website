@@ -1,3 +1,3 @@
-# global-event-handlers-website
+# event-handlers-website
 
-a [website](https://weizman.github.io/global-event-handlers-website/) for [global event handlers project](https://github.com/weizman/global-event-handlers)
+a [website](https://weizman.github.io/event-handlers-website/) for [event handlers project](https://github.com/weizman/event-handlers)

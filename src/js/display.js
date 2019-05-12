@@ -7,12 +7,12 @@ CONFIG = {
 
 let modeButton, displayButton;
 
-function getGEHElement (geh, setnum) {
-  return document.querySelector (`#${geh.split(' ').join('')}-${setnum}`);
+function getEHElement (eh, setnum) {
+  return document.querySelector (`#${eh.split(' ').join('')}-${setnum}`);
 }
 
-function unmarkDiff (geh, setnum, removeSimilars = false) {
-  const e = getGEHElement (geh, setnum);
+function unmarkDiff (eh, setnum, removeSimilars = false) {
+  const e = getEHElement (eh, setnum);
   if (removeSimilars) {
     e.style.display = 'none';
   } else {
@@ -21,32 +21,32 @@ function unmarkDiff (geh, setnum, removeSimilars = false) {
   }
 }
 
-function markDiff (geh, setnum) {
-  getGEHElement (geh, setnum).style.color = 'green';
+function markDiff (eh, setnum) {
+  getEHElement (eh, setnum).style.color = 'green';
 }
 
 function markDiffs (removeSimilars = false) {
-  const gehs1 = getGEHsBySelectedOptions ('1');
-  const gehs2 = getGEHsBySelectedOptions ('2');
+  const ehs1 = getEHsBySelectedOptions ('1');
+  const ehs2 = getEHsBySelectedOptions ('2');
 
-  if (gehs1) {
-    for (let i = 0; i < gehs1.length; i++) {
-      const geh = gehs1[i];
-      if (getMode () === 'diff-mode' && gehs2 && gehs2.indexOf (geh) === -1) {
-        markDiff (geh, '1');
+  if (ehs1) {
+    for (let i = 0; i < ehs1.length; i++) {
+      const eh = ehs1[i];
+      if (getMode () === 'diff-mode' && ehs2 && ehs2.indexOf (eh) === -1) {
+        markDiff (eh, '1');
       } else {
-        unmarkDiff (geh, '1', removeSimilars);
+        unmarkDiff (eh, '1', removeSimilars);
       }
     }
   }
 
-  if (gehs2) {
-    for (let i = 0; i < gehs2.length; i++) {
-      const geh = gehs2[i];
-      if (getMode () === 'diff-mode' && gehs1 && gehs1.indexOf (geh) === -1) {
-        markDiff (geh, '2');
+  if (ehs2) {
+    for (let i = 0; i < ehs2.length; i++) {
+      const eh = ehs2[i];
+      if (getMode () === 'diff-mode' && ehs1 && ehs1.indexOf (eh) === -1) {
+        markDiff (eh, '2');
       } else {
-        unmarkDiff (geh, '2', removeSimilars);
+        unmarkDiff (eh, '2', removeSimilars);
       }
     }
   }

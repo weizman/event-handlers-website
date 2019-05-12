@@ -7,7 +7,7 @@ const set1 = {
   osSelect: null,
   osVersionSelect: null,
   apiSelect: null,
-  gehContainer: null,
+  ehContainer: null,
   container: null,
 };
 
@@ -17,7 +17,7 @@ const set2 = {
   osSelect: null,
   osVersionSelect: null,
   apiSelect: null,
-  gehContainer: null,
+  ehContainer: null,
   container: null,
 };
 
@@ -26,7 +26,7 @@ const combinations = {
   os: {},
 };
 
-function getGEHs (browser, browserVersion, os, osVersion, api) {
+function getEHs (browser, browserVersion, os, osVersion, api) {
   const btn = document.getElementById('no-combination-button');
 
   if (
@@ -36,10 +36,10 @@ function getGEHs (browser, browserVersion, os, osVersion, api) {
     DATA[browser][browserVersion][os][osVersion]
   ) {
     btn.style.display = 'none';
-    return DATA[browser][browserVersion][os][osVersion][api] || ['this API has zero global event handlers'];
+    return DATA[browser][browserVersion][os][osVersion][api] || ['this API has zero event handlers'];
   }
 
-  const msg = `map for ${browser} ${browserVersion}, ${os} ${osVersion} global event handlers does not exist`;
+  const msg = `map for ${browser} ${browserVersion}, ${os} ${osVersion} event handlers does not exist`;
 
   console.error(msg);
 
@@ -47,9 +47,9 @@ function getGEHs (browser, browserVersion, os, osVersion, api) {
   btn.style.display = 'block';
 }
 
-function getGEHsBySelectedOptions (setnum) {
+function getEHsBySelectedOptions (setnum) {
   const set = getSet (setnum);
-  return getGEHs (
+  return getEHs (
     set.browserSelect.options[set.browserSelect.selectedIndex].value,
     set.browserVersionSelect.options[set.browserVersionSelect.selectedIndex]
       .value,
@@ -142,31 +142,31 @@ function onSelect (event, dontMarkDiffs = false) {
   filterVersionsOut (setnum, combinations.browser, set.browserSelect, set.browserVersionSelect);
   filterVersionsOut (setnum, combinations.os, set.osSelect, set.osVersionSelect);
 
-  while (set.gehContainer.firstChild) {
-    set.gehContainer.removeChild (set.gehContainer.firstChild);
+  while (set.ehContainer.firstChild) {
+    set.ehContainer.removeChild (set.ehContainer.firstChild);
   }
 
-  const arr = getGEHsBySelectedOptions (setnum); //.sort();
+  const arr = getEHsBySelectedOptions (setnum); //.sort();
   if (!arr) {
     return;
   }
 
   for (let i = 0; i < arr.length; i++) {
-    const geh = arr[i];
-    const gehA = document.createElement ('a');
+    const eh = arr[i];
+    const ehA = document.createElement ('a');
 
-    gehA.textContent = geh;
-    gehA.id = geh.split(' ').join('') + '-' + setnum;
-    gehA.style.margin = '10px';
-    gehA.style.color = 'black';
-    gehA.style.textDecoration = 'none';
-    gehA.href = `https://www.google.com/search?q=${set.apiSelect.options[set.apiSelect.selectedIndex].value}%20${geh}%20mdn`;
-    gehA.target = '_blank';
+    ehA.textContent = eh;
+    ehA.id = eh.split(' ').join('') + '-' + setnum;
+    ehA.style.margin = '10px';
+    ehA.style.color = 'black';
+    ehA.style.textDecoration = 'none';
+    ehA.href = `https://www.google.com/search?q=${set.apiSelect.options[set.apiSelect.selectedIndex].value}%20${eh}%20mdn`;
+    ehA.target = '_blank';
 
     const div = document.createElement ('div');
-    div.appendChild (gehA);
+    div.appendChild (ehA);
 
-    set.gehContainer.appendChild (div);
+    set.ehContainer.appendChild (div);
   }
 
   !dontMarkDiffs && markDiffs ();
@@ -297,9 +297,9 @@ function init (setnum) {
   set.osSelect = document.querySelector ('#os-select-' + setnum);
   set.osVersionSelect = document.querySelector ('#os-version-select-' + setnum);
   set.apiSelect = document.querySelector ('#api-' + setnum);
-  set.gehContainer = document.querySelector ('#geh-container-' + setnum);
+  set.ehContainer = document.querySelector ('#eh-container-' + setnum);
 
-  set.gehContainer.style.width = '100%';
+  set.ehContainer.style.width = '100%';
 
   set.browserSelect.onchange = set.browserVersionSelect.onchange = set.osSelect.onchange = set.osVersionSelect.onchange = set.apiSelect.onchange = onSelect;
 }

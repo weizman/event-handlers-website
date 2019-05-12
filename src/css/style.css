@@ -60,7 +60,7 @@ body {
     text-decoration: underline;
   }
 
-  *[id*="thisAPIhaszeroglobaleventhandlers"] {
+  *[id*="thisAPIhaszeroeventhandlers"] {
     color: red !important;
     display: block !important
   }
